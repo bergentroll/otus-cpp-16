@@ -1,0 +1,10 @@
+[requires]
+dlib/19.21
+openblas/0.3.10
+
+[generators]
+cmake
+
+[options]
+
+# vi: syntax=dosini

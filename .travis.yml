@@ -1,0 +1,39 @@
+---
+language: cpp
+dist: bionic
+
+addons:
+  apt:
+    update: false
+    packages:
+      - python3-pip
+      - python3-setuptools
+      - python3-wheel
+
+install:
+  - set -e
+  - pip3 install conan==1.28
+  - conan profile new default --detect
+  - conan profile update settings.compiler.libcxx=libstdc++11 default
+
+env:
+  - BUILD_TYPE=Release
+
+script:
+  - conan install -s build_type=${BUILD_TYPE} --build missing .
+  - cmake --DCMAKE_BUILD_TYPE=${BUILD_TYPE} .
+  - cmake --build .
+  - cmake --build . --target test
+  - cmake --build . --target package
+
+after_success:
+  - utils/travis-stat.sh
+
+deploy:
+  - provider: bintray
+    skip_cleanup: true
+    file: bintray.json
+    user: bergentroll
+    edge: true
+    on:
+      branch: master
