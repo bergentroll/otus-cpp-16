@@ -29,26 +29,22 @@ endif()
 ### Main targets ##############################################################
 
 add_library(
-  ${CMAKE_PROJECT_NAME}-obj
+  ${CMAKE_PROJECT_NAME}
   STATIC
-  #${SRC_PATH}/clusterer.cpp
-  #${SRC_PATH}/get_arg.cpp
-  )
+  ${SRC_PATH}/clusterer.cpp)
 
 add_executable(
   rclst
-  ${SRC_PATH}/main.cpp)
+  ${SRC_PATH}/rclst.cpp)
 target_link_libraries(
   ${CMAKE_PROJECT_NAME}
-  ${CMAKE_PROJECT_NAME}-obj
   ${DLIB})
 
 add_executable(
   rclss
-  ${SRC_PATH}/main.cpp)
+  ${SRC_PATH}/rclss.cpp)
 target_link_libraries(
   ${CMAKE_PROJECT_NAME}
-  ${CMAKE_PROJECT_NAME}-obj
   ${DLIB})
 
 ### Packing ###################################################################
