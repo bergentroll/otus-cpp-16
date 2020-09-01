@@ -35,8 +35,10 @@ add_library(
 
 add_executable(
   rclst
-  ${SRC_PATH}/rclst.cpp)
+  ${SRC_PATH}/rclst.cpp
+  ${SRC_PATH}/get_args.cpp)
 target_link_libraries(
+  rclst
   ${CMAKE_PROJECT_NAME}
   ${DLIB})
 
@@ -44,6 +46,7 @@ add_executable(
   rclss
   ${SRC_PATH}/rclss.cpp)
 target_link_libraries(
+  rclss
   ${CMAKE_PROJECT_NAME}
   ${DLIB})
 

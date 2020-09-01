@@ -10,7 +10,7 @@ void Clusterer::operator()(int numberOfClusters) {
   vector<sample_type> initialCenters;
 
   for (auto const & point: data)
-    samples.push_back({ point.x, point.y });
+    samples.push_back(point);
 
   data.clear();
 
@@ -23,5 +23,5 @@ void Clusterer::operator()(int numberOfClusters) {
 
   kMeans.train(samples, initialCenters);
 
-  for (auto const &i: samples) data.push_back({kMeans(i), i(0), i(1)});
+  //for (auto const &i: samples) data.push_back({kMeans(i), i(0), i(1)});
 }
