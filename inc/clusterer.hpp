@@ -7,7 +7,8 @@
 #include <vector>
 
 namespace otus {
-  using DataType = dlib::matrix<float, 7, 1>;
+  constexpr int dataSize = 7;
+  using DataType = dlib::matrix<float, dataSize, 1>;
 
   class Flat {
   public:
@@ -26,7 +27,7 @@ namespace otus {
         >> latitude >> semiColon >> longitude >> semiColon
         >> rooms >> semiColon >> price >> semiColon
         >> square >> semiColon >> kitchen >> semiColon
-        >> storeys >> semiColon >> floor >> semiColon;
+        >> floor >> semiColon >> storeys >> semiColon;
 
       bool isNotBoundary { false };
 
@@ -57,6 +58,8 @@ namespace otus {
           data.end(),
           std::back_inserter(this->data),
           [](auto const &item) -> DataType {return static_cast<DataType>(item); });
+
+      normalize();
     }
 
     void operator()(int numberOfClusters);
@@ -66,5 +69,7 @@ namespace otus {
 
     std::vector<DataType> data;
     dlib::kcentroid<KernelType> kCentroid;
+
+    void normalize();
   };
 }
