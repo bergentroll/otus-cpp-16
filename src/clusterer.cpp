@@ -4,24 +4,19 @@ using namespace otus;
 using namespace std;
 
 void Clusterer::operator()(int numberOfClusters) {
-  dlib::kkmeans<kernel_type> kMeans(kCentroid);
+  dlib::kkmeans<KernelType> kMeans(kCentroid);
 
-  vector<sample_type> samples;
-  vector<sample_type> initialCenters;
-
-  for (auto const & point: data)
-    samples.push_back(point);
-
-  data.clear();
+  vector<DataType> initialCentersI;
+  vector<DataType> & initialCenters { initialCentersI };
 
   kMeans.set_number_of_centers(numberOfClusters);
   pick_initial_centers(
       numberOfClusters,
       initialCenters,
-      samples,
+      data,
       kMeans.get_kernel());
 
-  kMeans.train(samples, initialCenters);
+  kMeans.train(data, initialCenters);
 
-  //for (auto const &i: samples) data.push_back({kMeans(i), i(0), i(1)});
+  //for (auto const &i: data) cout << kMeans(i) << DataType(i)(0) << endl;
 }

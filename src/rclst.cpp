@@ -28,5 +28,7 @@ int main(int argc, char const ** argv) {
   while (getline(cin, buf)) data.push_back(buf);
 
   Clusterer clusterer { data, 0.001 };
+  data.clear();
+
   clusterer(numberOfClusters);
 }

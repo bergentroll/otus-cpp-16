@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <dlib/clustering.h>
 #include <optional>
 #include <sstream>
@@ -38,8 +39,6 @@ namespace otus {
         static_cast<float>(rooms),
         price, square, kitchen,
         static_cast<float>(isNotBoundary) };
-
-      std::cerr << data << std::endl;
     }
 
     operator DataType() const { return data; }
@@ -51,16 +50,21 @@ namespace otus {
   class Clusterer {
   public:
     Clusterer(std::vector<Flat> &data, float gamma=0.1, float accuracy=0.01):
-    data(data),
-    kCentroid(kernel_type(gamma), accuracy) { }
+    kCentroid(KernelType(gamma), accuracy) {
+      this->data.reserve(data.size());
+      std::transform(
+          data.begin(),
+          data.end(),
+          std::back_inserter(this->data),
+          [](auto const &item) -> DataType {return static_cast<DataType>(item); });
+    }
 
     void operator()(int numberOfClusters);
 
   private:
-    using sample_type = DataType;
-    using kernel_type = dlib::radial_basis_kernel<sample_type>;
+    using KernelType = dlib::radial_basis_kernel<DataType>;
 
-    std::vector<Flat> & data;
-    dlib::kcentroid<kernel_type> kCentroid;
+    std::vector<DataType> data;
+    dlib::kcentroid<KernelType> kCentroid;
   };
 }
