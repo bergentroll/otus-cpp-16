@@ -4,8 +4,6 @@ using namespace otus;
 using namespace std;
 
 void Clusterer::operator()(int numberOfClusters) {
-  dlib::kkmeans<KernelType> kMeans(kCentroid);
-
   vector<DataType> initialCentersI;
   vector<DataType> & initialCenters { initialCentersI };
 

@@ -32,4 +32,6 @@ int main(int argc, char const ** argv) {
   data.clear();
 
   clusterer(numberOfClusters);
+
+  clusterer.save(outputFileName);
 }

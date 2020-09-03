@@ -54,6 +54,8 @@ namespace otus {
 
       InputValidator<char> semiColon { ';' };
 
+      /// FIXME Move to main.
+      /// TODO Make exceptions hierarhy.
       try {
         ss
           >> latitude >> semiColon >> longitude >> semiColon
@@ -89,7 +91,7 @@ namespace otus {
   class Clusterer {
   public:
     Clusterer(std::vector<Flat> &data, float gamma=0.1, float accuracy=0.01):
-    kCentroid(KernelType(gamma), accuracy) {
+    kMeans(dlib::kcentroid(KernelType(gamma), accuracy)) {
       this->data.reserve(data.size());
       std::transform(
           data.begin(),
@@ -100,13 +102,17 @@ namespace otus {
       normalize();
     }
 
+    void save(std::string const & filename) {
+      dlib::serialize(filename + ".dat") << kMeans;
+    }
+
     void operator()(int numberOfClusters);
 
   private:
     using KernelType = dlib::radial_basis_kernel<DataType>;
 
     std::vector<DataType> data;
-    dlib::kcentroid<KernelType> kCentroid;
+    dlib::kkmeans<KernelType> kMeans;
 
     void normalize();
   };
