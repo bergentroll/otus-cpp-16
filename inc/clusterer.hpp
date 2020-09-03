@@ -12,12 +12,19 @@ namespace otus {
   constexpr int dataSize = 7;
   using DataType = dlib::matrix<float, dataSize, 1>;
 
+  class InvalidToken: public std::runtime_error {
+  public:
+    InvalidToken(std::string const & message):
+    std::runtime_error(message) { }
+  };
+
   template <typename T>
   class InputValidator {
   public:
-    class InvalidToken: public std::runtime_error {
+    class ConcreteInvalidToken: public InvalidToken {
     public:
-      InvalidToken(std::string const & message): std::runtime_error(message) { }
+      ConcreteInvalidToken(std::string const & message):
+      InvalidToken(message) { }
     };
 
     InputValidator(T const & value): expected(value) { }
@@ -37,7 +44,7 @@ namespace otus {
       ss
         << "expected \"" << val.expected << '"'
         << ", but \"" << buf << "\" given";
-      throw typename InputValidator<T>::InvalidToken(ss.str());
+      throw typename InputValidator<T>::ConcreteInvalidToken(ss.str());
     }
     return is;
   }
@@ -54,7 +61,6 @@ namespace otus {
 
       InputValidator<char> semiColon { ';' };
 
-      /// TODO Make exceptions hierarhy.
       ss
         >> latitude >> semiColon >> longitude >> semiColon
         >> rooms >> semiColon >> price >> semiColon

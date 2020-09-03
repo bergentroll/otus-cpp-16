@@ -30,7 +30,7 @@ int main(int argc, char const ** argv) {
     try {
       data.push_back(buf);
     }
-    catch (InputValidator<char>::InvalidToken const &e) {
+    catch (InvalidToken const &e) {
       cerr << "Invalid input \"" << buf << "\": " <<  e.what() << endl;
     }
   }
