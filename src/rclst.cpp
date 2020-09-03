@@ -22,11 +22,18 @@ int main(int argc, char const ** argv) {
     return 1;
   }
 
-  std::vector<Flat> data { };
+  vector<Flat> data { };
 
   string buf;
 
-  while (getline(cin, buf)) data.push_back(buf);
+  while (getline(cin, buf)) {
+    try {
+      data.push_back(buf);
+    }
+    catch (InputValidator<char>::InvalidToken const &e) {
+      cerr << "Invalid input \"" << buf << "\": " <<  e.what() << endl;
+    }
+  }
 
   Clusterer clusterer { data, 0.001 };
   data.clear();

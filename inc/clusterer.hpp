@@ -54,20 +54,12 @@ namespace otus {
 
       InputValidator<char> semiColon { ';' };
 
-      /// FIXME Move to main.
       /// TODO Make exceptions hierarhy.
-      try {
-        ss
-          >> latitude >> semiColon >> longitude >> semiColon
-          >> rooms >> semiColon >> price >> semiColon
-          >> square >> semiColon >> kitchen >> semiColon
-          >> floor >> semiColon >> storeys;
-      }
-      catch (InputValidator<char>::InvalidToken const &e) {
-        std::cerr
-          << "Invalid input \"" << ss.str() << "\": "
-          <<  e.what() << std::endl;
-      }
+      ss
+        >> latitude >> semiColon >> longitude >> semiColon
+        >> rooms >> semiColon >> price >> semiColon
+        >> square >> semiColon >> kitchen >> semiColon
+        >> floor >> semiColon >> storeys;
 
       bool isNotBoundary { false };
 
