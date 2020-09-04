@@ -4,8 +4,7 @@ using namespace otus;
 using namespace std;
 
 void Clusterer::operator()(int numberOfClusters) {
-  vector<DataType> initialCentersI;
-  vector<DataType> & initialCenters { initialCentersI };
+  vector<DataType> initialCenters;
 
   kMeans.set_number_of_centers(numberOfClusters);
   pick_initial_centers(

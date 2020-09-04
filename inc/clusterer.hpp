@@ -100,18 +100,32 @@ namespace otus {
       normalize();
     }
 
-    void save(std::string const & filename) {
-      dlib::serialize(filename + ".dat") << kMeans;
+    Clusterer(std::string const & filename):
+    kMeans(dlib::kcentroid(KernelType())) {
+      // TODO Handle errors
+      dlib::deserialize(filename + fileSuffix) >> kMeans;
     }
 
+    void save(std::string const & filename) {
+      // TODO Handle errors
+      dlib::serialize(filename + fileSuffix) << kMeans;
+    }
+
+    // TODO Move to c'tor
     void operator()(int numberOfClusters);
+
+    void analyze(Flat const & item) {
+      std::cerr << kMeans(item) << std::endl;
+    }
 
   private:
     using KernelType = dlib::radial_basis_kernel<DataType>;
 
+    std::string const fileSuffix { ".dat" };
     std::vector<DataType> data;
     dlib::kkmeans<KernelType> kMeans;
 
+    // TODO Save function
     void normalize();
   };
 }
