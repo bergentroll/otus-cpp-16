@@ -14,6 +14,10 @@ void Clusterer::train(int numberOfClusters) {
       kMeans.get_kernel());
 
   kMeans.train(data, initialCenters);
+
+  for (size_t i { }; i < data.size(); ++i) {
+    metaData[i].second = kMeans(data[i]);
+  }
 }
 
 void Clusterer::normalizeData() {

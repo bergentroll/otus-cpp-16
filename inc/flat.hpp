@@ -39,6 +39,7 @@ namespace otus {
       ss
         << "expected \"" << val.expected << '"'
         << ", but \"" << buf << "\" given";
+      ss.seekp(-1);
       throw typename InputValidator<T>::ConcreteInvalidToken(ss.str());
     }
     return is;
@@ -76,6 +77,14 @@ namespace otus {
     }
 
     operator DataType() const { return data; }
+
+    operator std::string() const {
+      std::stringstream ss { };
+      for (auto &i: data) {
+        ss << i << ';';
+      }
+      return ss.str();
+    }
 
   private:
     DataType data;;

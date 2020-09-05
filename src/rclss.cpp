@@ -24,7 +24,7 @@ int main(int argc, char const ** argv) {
   while (getline(cin, buf)) {
     try {
       Flat item { buf };
-      clusterer(item);
+      cout << clusterer(item) << std::endl;
     }
     catch (InvalidToken const &e) {
       cerr << "Invalid input \"" << buf << "\": " <<  e.what() << endl;
