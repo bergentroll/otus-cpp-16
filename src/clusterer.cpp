@@ -3,7 +3,7 @@
 using namespace otus;
 using namespace std;
 
-void Clusterer::operator()(int numberOfClusters) {
+void Clusterer::train(int numberOfClusters) {
   vector<DataType> initialCenters;
 
   kMeans.set_number_of_centers(numberOfClusters);
@@ -16,11 +16,9 @@ void Clusterer::operator()(int numberOfClusters) {
   kMeans.train(data, initialCenters);
 }
 
-void Clusterer::normalize() {
+void Clusterer::normalizeData() {
   auto min = vector<float>(dataSize, numeric_limits<float>::max());
   auto max = vector<float>(dataSize, numeric_limits<float>::min());
-
-  using DataSizeType = decltype(DataType().size());
 
   for (auto & item: data) {
     for (DataSizeType i { }; i < item.size(); ++i) {
@@ -30,18 +28,13 @@ void Clusterer::normalize() {
     }
   }
 
-  // y = kx - a
-  vector<float> k { max }, a { min };
+  k = max; a = min;
 
-  for (size_t i { }; i < dataSize; ++i) {
+  for (size_t i { }; i < dataSize; ++i)
     k[i] = 100 / (k[i] - a[i]);
-  }
 
   for_each(
       data.begin(),
       data.end(),
-      [&k, &a](auto & item) {
-        for (DataSizeType i { }; i < item.size(); ++i)
-          item(i) = k[i] * (item(i) - a[i]);
-      });
+      [this](auto & item) { normalize(item); });
 }

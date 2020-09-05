@@ -35,10 +35,8 @@ int main(int argc, char const ** argv) {
     }
   }
 
-  Clusterer clusterer { data, 0.001 };
+  Clusterer clusterer { data, numberOfClusters, 0.001 };
   data.clear();
-
-  clusterer(numberOfClusters);
 
   clusterer.save(outputFileName);
 }
