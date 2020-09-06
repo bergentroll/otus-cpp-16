@@ -52,8 +52,6 @@ namespace otus {
     return is;
   }
 
-  // TODO Verify lat, lon boundaries.
-  // TODO Try to inherit dlib::matrix.
   class Flat: public DataType {
   public:
     using Cluster = std::optional<unsigned long>;
@@ -73,6 +71,16 @@ namespace otus {
         >> rooms >> semiColon >> price >> semiColon
         >> square >> semiColon >> kitchen >> semiColon
         >> floor >> semiColon >> storeys;
+
+      if (latitude < -90 || latitude > 90) {
+        throw InvalidToken(
+            "invalid latitude " + std::to_string(latitude) + " given");
+      }
+
+      if (longitude < 0 || longitude > 180) {
+        throw InvalidToken(
+            "invalid longitude " + std::to_string(longitude) + " given");
+      }
 
       bool isNotBoundary { false };
 
