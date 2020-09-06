@@ -3,6 +3,7 @@
 #include <cmath>
 #include <dlib/clustering.h>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 #include <vector>
 

@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <dlib/clustering.h>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -12,6 +13,12 @@
 namespace otus {
   class Clusterer {
   public:
+    class IOError: public std::runtime_error {
+    public:
+      IOError(std::string const & message):
+      std::runtime_error(message) { }
+    };
+
     Clusterer(
         std::vector<Flat> const & data,
         int numberOfClusters,
@@ -42,15 +49,23 @@ namespace otus {
 
     Clusterer(std::string const & filename):
     kMeans(dlib::kcentroid(KernelType())) {
-      // TODO Handle errors
-      dlib::deserialize(filename + fileSuffix)
-        >> kMeans >> k >> a >> metaData;
+      try {
+        dlib::deserialize(filename + fileSuffix)
+          >> kMeans >> k >> a >> metaData;
+      }
+      catch (dlib::serialization_error const & e) {
+        throw(IOError(e.what()));
+      }
     }
 
     void save(std::string const & filename) {
-      // TODO Handle errors
-      dlib::serialize(filename + fileSuffix)
-        << kMeans << k << a << metaData;
+      try {
+        dlib::serialize(filename + fileSuffix)
+          << kMeans << k << a << metaData;
+      }
+      catch (dlib::serialization_error const & e) {
+        throw(IOError(e.what()));
+      }
     }
 
     std::string operator()(Flat const & flat) const {

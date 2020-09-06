@@ -3,6 +3,7 @@
 
 #include "clusterer.hpp"
 #include "get_args.hpp"
+#include "utility.hpp"
 
 using namespace std;
 using namespace otus;
@@ -38,5 +39,11 @@ int main(int argc, char const ** argv) {
   Clusterer clusterer { data, numberOfClusters, 0.001 };
   data.clear();
 
-  clusterer.save(outputFileName);
+  try {
+    clusterer.save(outputFileName);
+  }
+  catch (Clusterer::IOError const & e) {
+    cerr << "Error while saving data: " << uncapitalize(e.what()) << endl;
+    return EXIT_FAILURE;
+  }
 }

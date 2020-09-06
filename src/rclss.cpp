@@ -1,8 +1,10 @@
 #include <iostream>
 #include <limits>
+#include <memory>
 
 #include "clusterer.hpp"
 #include "get_args.hpp"
+#include "utility.hpp"
 
 using namespace std;
 using namespace otus;
@@ -18,7 +20,16 @@ int main(int argc, char const ** argv) {
     return 1;
   }
 
-  Clusterer clusterer { inputFileName };
+  unique_ptr<Clusterer> clustererPtr;
+  try {
+    clustererPtr = make_unique<Clusterer>(inputFileName);
+  }
+  catch (Clusterer::IOError const & e) {
+    cerr << "Error while saving data: " << uncapitalize(e.what()) << endl;
+    return EXIT_FAILURE;
+  }
+  Clusterer & clusterer { *clustererPtr };
+
   string buf;
 
   while (getline(cin, buf)) {
