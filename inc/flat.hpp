@@ -103,12 +103,16 @@ namespace otus {
 
 
     operator std::string() const {
-      // FIXME Eliminate last semicolon.
       std::stringstream ss { };
+
       for (auto &i: *this) {
         ss << i << ';';
       }
-      return ss.str();
+
+      std::string result { ss.str() };
+      result.pop_back();
+
+      return result;
     }
   };
 }
