@@ -32,8 +32,8 @@ namespace otus {
           data.begin(),
           data.end(),
           std::back_inserter(metaData),
-          [](auto const &item) -> std::pair<std::string, ClusterNumType> {
-            return std::make_pair(std::string(item), 0);
+          [](auto const &item) -> std::pair<DataType, ClusterNumType> {
+            return std::make_pair(item, 0);
           });
 
       normalizeData();
@@ -59,11 +59,26 @@ namespace otus {
       normalize(item);
 
       auto cluster { kMeans(item) };
-      ss << cluster << '\n';
 
-      for (auto &md: metaData)
-        if (md.second == cluster)
-          ss << md.first << '\n';
+      std::vector<std::pair<float, std::string>> neighbours { };
+
+      for (auto &md: metaData) {
+        if (md.second == cluster) {
+          neighbours.push_back(
+              std::make_pair(distance(flat, md.first), to_string(md.first)));
+        }
+      }
+
+      std::sort(
+          neighbours.begin(),
+          neighbours.end(),
+          [](auto &left, auto &right) {
+            return left.first < right.first;
+          });
+
+      for (auto const &neighbour: neighbours) {
+        ss << neighbour.second << '\n';
+      }
 
       return ss.str();
     }
@@ -75,7 +90,7 @@ namespace otus {
 
     std::string const fileSuffix { ".dat" };
     std::vector<DataType> data;
-    std::vector<std::pair<std::string, ClusterNumType>> metaData;
+    std::vector<std::pair<DataType, ClusterNumType>> metaData;
     dlib::kkmeans<KernelType> kMeans;
     /// For normalization function y = kx - a.
     std::vector<float> k, a; // TODO Make serializable functor.

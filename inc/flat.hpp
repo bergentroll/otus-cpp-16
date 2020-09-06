@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cmath>
 #include <dlib/clustering.h>
 #include <sstream>
@@ -12,7 +14,7 @@ namespace otus {
     return angle * M_PI / 180;
   }
 
-  inline float distanceGov(DataType first, DataType second) {
+  inline float distance(DataType first, DataType second) {
     using namespace std;
 
     auto fi1 { degToRad(first(0)) };
@@ -21,6 +23,15 @@ namespace otus {
     auto la2 { degToRad(second(1)) };
 
     return acos(sin(fi1) * sin(fi2) + cos(fi1) * cos(fi2) * cos(la1 - la2));
+  }
+
+  inline std::string to_string(DataType const & item) {
+      // FIXME Eliminate last semicolon.
+      std::stringstream ss { };
+      for (auto &i: item) {
+        ss << i << ';';
+      }
+      return ss.str();
   }
 
   class InvalidToken: public std::runtime_error {
@@ -61,6 +72,8 @@ namespace otus {
     return is;
   }
 
+  // TODO Verify lat, lon boundaries.
+  // TODO Try to inherit dlib::matrix.
   class Flat {
   public:
     using Cluster = std::optional<unsigned long>;
@@ -95,12 +108,7 @@ namespace otus {
     operator DataType() const { return data; }
 
     operator std::string() const {
-      // FIXME Eliminate last semicolon.
-      std::stringstream ss { };
-      for (auto &i: data) {
-        ss << i << ';';
-      }
-      return ss.str();
+      return to_string(data);
     }
 
   private:
