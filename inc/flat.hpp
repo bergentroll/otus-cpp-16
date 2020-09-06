@@ -14,26 +14,6 @@ namespace otus {
     return angle * M_PI / 180;
   }
 
-  inline float distance(DataType first, DataType second) {
-    using namespace std;
-
-    auto fi1 { degToRad(first(0)) };
-    auto fi2 { degToRad(second(0)) };
-    auto la1 { degToRad(first(1)) };
-    auto la2 { degToRad(second(1)) };
-
-    return acos(sin(fi1) * sin(fi2) + cos(fi1) * cos(fi2) * cos(la1 - la2));
-  }
-
-  inline std::string to_string(DataType const & item) {
-      // FIXME Eliminate last semicolon.
-      std::stringstream ss { };
-      for (auto &i: item) {
-        ss << i << ';';
-      }
-      return ss.str();
-  }
-
   class InvalidToken: public std::runtime_error {
   public:
     InvalidToken(std::string const & message):
@@ -74,9 +54,11 @@ namespace otus {
 
   // TODO Verify lat, lon boundaries.
   // TODO Try to inherit dlib::matrix.
-  class Flat {
+  class Flat: public DataType {
   public:
     using Cluster = std::optional<unsigned long>;
+
+    Flat() = default;
 
     Flat(std::string const &description) {
       float latitude, longitude, price, square, kitchen;
@@ -98,20 +80,35 @@ namespace otus {
         isNotBoundary = true;
       }
 
-      data = {
-        latitude, longitude,
-        static_cast<float>(rooms),
-        price, square, kitchen,
-        static_cast<float>(isNotBoundary) };
+      (*this)(0) = latitude;
+      (*this)(1) = longitude;
+      (*this)(2) = static_cast<float>(rooms);
+      (*this)(3) = price;
+      (*this)(4) = square;
+      (*this)(5) = kitchen;
+      (*this)(6) = static_cast<float>(isNotBoundary);
     }
 
-    operator DataType() const { return data; }
+    //operator DataType() const { return data; }
+    float distanceTo(DataType const & other) const {
+      using namespace std;
+
+      auto fi1 { degToRad((*this)(0)) };
+      auto fi2 { degToRad(other(0)) };
+      auto la1 { degToRad((*this)(1)) };
+      auto la2 { degToRad(other(1)) };
+
+      return acos(sin(fi1) * sin(fi2) + cos(fi1) * cos(fi2) * cos(la1 - la2));
+    }
+
 
     operator std::string() const {
-      return to_string(data);
+      // FIXME Eliminate last semicolon.
+      std::stringstream ss { };
+      for (auto &i: *this) {
+        ss << i << ';';
+      }
+      return ss.str();
     }
-
-  private:
-    DataType data;;
   };
 }
