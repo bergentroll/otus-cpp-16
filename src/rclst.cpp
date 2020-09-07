@@ -31,7 +31,7 @@ int main(int argc, char const ** argv) {
     try {
       data.push_back(buf);
     }
-    catch (InvalidToken const &e) {
+    catch (ParsingError const &e) {
       cerr << "Invalid input \"" << buf << "\": " <<  e.what() << endl;
     }
   }

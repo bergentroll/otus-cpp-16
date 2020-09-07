@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cctype>
+#include <cmath>
 #include <string>
 
 namespace otus {
@@ -9,4 +10,6 @@ namespace otus {
     if (result.size()) result[0] = std::tolower(result[0]);
     return result;
   }
+
+  inline float degToRad(float angle) { return angle * M_PI / 180; }
 }

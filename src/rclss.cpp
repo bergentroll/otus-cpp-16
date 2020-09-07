@@ -37,7 +37,7 @@ int main(int argc, char const ** argv) {
       Flat item { buf };
       cout << clusterer(item) << std::endl;
     }
-    catch (InvalidToken const &e) {
+    catch (ParsingError const &e) {
       cerr << "Invalid input \"" << buf << "\": " <<  e.what() << endl;
     }
   }

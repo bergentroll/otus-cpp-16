@@ -6,28 +6,25 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <utility.hpp>
 
 namespace otus {
   constexpr int dataSize = 7;
   using DataType = dlib::matrix<float, dataSize, 1>;
 
-  inline float degToRad(float angle) {
-    return angle * M_PI / 180;
-  }
-
-  class InvalidToken: public std::runtime_error {
+  class ParsingError: public std::runtime_error {
   public:
-    InvalidToken(std::string const & message):
+    ParsingError(std::string const & message):
     std::runtime_error(message) { }
   };
 
   template <typename T>
   class InputValidator {
   public:
-    class ConcreteInvalidToken: public InvalidToken {
+    class InvalidToken: public ParsingError {
     public:
-      ConcreteInvalidToken(std::string const & message):
-      InvalidToken(message) { }
+      InvalidToken(std::string const & message):
+      ParsingError(message) { }
     };
 
     InputValidator(T const & value): expected(value) { }
@@ -48,7 +45,7 @@ namespace otus {
         << "expected \"" << val.expected << '"'
         << ", but \"" << buf << "\" given";
       ss.seekp(-1);
-      throw typename InputValidator<T>::ConcreteInvalidToken(ss.str());
+      throw typename InputValidator<T>::InvalidToken(ss.str());
     }
     return is;
   }
@@ -64,30 +61,38 @@ namespace otus {
       int rooms, storeys, floor;
 
       std::stringstream ss { description };
+      auto sepNum = std::count(description.begin(), description.end(), ';');
 
       InputValidator<char> semiColon { ';' };
+
+      bool isNotBoundary { false };
 
       ss
         >> latitude >> semiColon >> longitude >> semiColon
         >> rooms >> semiColon >> price >> semiColon
-        >> square >> semiColon >> kitchen >> semiColon
-        >> floor >> semiColon >> storeys;
+        >> square >> semiColon >> kitchen >> semiColon;
+
+      if (sepNum == 7) {
+        ss >> floor >> semiColon >> storeys;
+        if (floor > 1 && floor < storeys) isNotBoundary = true;
+      }
+      else if (sepNum == 6) {
+        ss >> isNotBoundary;
+      }
+      else {
+        throw ParsingError("invalid fileds number");
+      }
 
       if (latitude < -90 || latitude > 90) {
-        throw InvalidToken(
+        throw ParsingError(
             "invalid latitude " + std::to_string(latitude) + " given");
       }
 
       if (longitude < 0 || longitude > 180) {
-        throw InvalidToken(
+        throw ParsingError(
             "invalid longitude " + std::to_string(longitude) + " given");
       }
 
-      bool isNotBoundary { false };
-
-      if (floor > 1 && floor < storeys) {
-        isNotBoundary = true;
-      }
 
       (*this)(0) = latitude;
       (*this)(1) = longitude;
