@@ -23,12 +23,11 @@ script:
   - conan install -s build_type=${BUILD_TYPE} --build missing .
   - cmake --DCMAKE_BUILD_TYPE=${BUILD_TYPE} .
   - cmake --build .
-  - cmake --build . --target test
   - cmake --build . --target package
 
 after_success:
-  - ./rclst 5 random_set << ./data/sample_data.txt
-  - ./rclss random_set << ./data/sample_input.txt
+  - ./bin/rclst 5 random_set < ./data/sample_data.txt
+  - ./bin/rclss random_set < ./data/sample_input.txt
 
 deploy:
   - provider: bintray
