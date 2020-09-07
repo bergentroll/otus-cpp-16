@@ -31,7 +31,8 @@ endif()
 add_library(
   ${CMAKE_PROJECT_NAME}
   STATIC
-  ${SRC_PATH}/clusterer.cpp)
+  ${SRC_PATH}/clusterer.cpp
+  ${SRC_PATH}/flat.cpp)
 
 add_executable(
   rclst
