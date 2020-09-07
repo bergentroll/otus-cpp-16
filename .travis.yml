@@ -27,7 +27,8 @@ script:
   - cmake --build . --target package
 
 after_success:
-  - utils/travis-stat.sh
+  - ./rclst 5 random_set << ./data/sample_data.txt
+  - ./rclss random_set << ./data/sample_input.txt
 
 deploy:
   - provider: bintray

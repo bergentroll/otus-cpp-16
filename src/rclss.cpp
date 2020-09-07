@@ -25,7 +25,7 @@ int main(int argc, char const ** argv) {
     clustererPtr = make_unique<Clusterer>(inputFileName);
   }
   catch (Clusterer::IOError const & e) {
-    cerr << "Error while saving data: " << uncapitalize(e.what()) << endl;
+    cerr << "Error while loading data: " << uncapitalize(e.what()) << endl;
     return EXIT_FAILURE;
   }
   Clusterer & clusterer { *clustererPtr };
