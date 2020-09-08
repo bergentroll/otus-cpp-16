@@ -56,7 +56,8 @@ namespace otus {
 
     Flat(std::string const &description);
 
-    float distanceTo(DataType const & other) const;
+    /// Calculate great-circle distance between this flat and other one.
+    float geoDistanceTo(DataType const & other) const;
 
     operator std::string() const;
   };

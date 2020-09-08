@@ -61,10 +61,10 @@ string Clusterer::operator()(Flat const & flat) const {
 
   vector<pair<float, string>> neighbours { };
 
+  dlib::squared_euclidean_distance distance { };
   for (auto &md: metaData) {
     if (md.second == cluster) {
-      neighbours.push_back(
-          make_pair(flat.distanceTo(md.first), string(md.first)));
+      neighbours.push_back(make_pair(distance(flat, md.first), string(md.first)));
     }
   }
 

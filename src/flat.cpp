@@ -52,7 +52,7 @@ Flat::Flat(string const &description) {
   (*this)(6) = static_cast<float>(isNotBoundary);
 }
 
-float Flat::distanceTo(DataType const & other) const {
+float Flat::geoDistanceTo(DataType const & other) const {
   auto fi1 { degToRad((*this)(0)) };
   auto fi2 { degToRad(other(0)) };
   auto la1 { degToRad((*this)(1)) };
